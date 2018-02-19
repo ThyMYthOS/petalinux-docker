@@ -1,13 +1,18 @@
-# Encapsulate Xilinx Petalinux tools 14.04 into docker image
+# Ubuntu docker image for Xilinx Petalinux tools 17.04
 
 FROM  ubuntu:16.04
-LABEL maintainer="xaljer@outlook.com"
+LABEL maintainer="lxzheng@xmu.edu.cn"
 
 ARG install_dir=/opt
 ARG installer_url=172.17.0.1:8000
+ARG petalinux_dir=petalinux-v2017.4-final
 
-ENV PETALINUX_VER=2014.4 \
-    PETALINUX=${install_dir}/petalinux-v2014.4-final
+ENV PETALINUX_VER=2017.4 				\
+    PETALINUX=${install_dir}/${petalinux_dir}		\
+    LANG=en_US.UTF-8 					\
+    LANGUAGE="en_US:en"					\
+    LC_ALL=en_US.UTF-8	
+
 ENV PATH="${PETALINUX}/tools/linux-i386/arm-xilinx-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/arm-xilinx-linux-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/microblaze-xilinx-elf/bin:\
@@ -16,14 +21,16 @@ ${PETALINUX}/tools/linux-i386/petalinux/bin:\
 ${PETALINUX}/tools/common/petalinux/bin:\
 ${PATH}"
 
-RUN dpkg --add-architecture i386 && \
-    apt-get update && apt-get install -y --no-install-recommends \
+RUN dpkg --add-architecture i386 		&& \
+    apt-get update 				&& \
+    apt-get upgrade -y 				&& \
+    apt-get install -y --no-install-recommends 	   \
 # Required tools and libraries of Petalinux.
-# See in: ug1144-petalinux-tools-reference-guide, v2014.4.
+# See in: ug1144-petalinux-tools-reference-guide, v2017.4
     tofrodos            \
     iproute             \
     gawk                \
-    gcc-4.7             \
+    gcc                 \
     git-core            \
     make                \
     net-tools           \
@@ -41,43 +48,54 @@ RUN dpkg --add-architecture i386 && \
     libncursesw5:i386   \
     libncurses5:i386    \
     libbz2-1.0:i386     \
-    libc6:i386          \
     libstdc++6:i386     \
     libselinux1         \
     libselinux1:i386    \
+    diffstat		\
+    xvfb		\
+    chrpath		\
+    socat		\
+    unzip		\
+    texinfo		\
+    gcc-multilib	\
+    build-essential	\
+    libsdl1.2-dev	\
+    libglib2.0-dev	\
+    zlib1g:i386		\
+    libssl-dev		\
+    xterm		\
+    autoconf		\
+    libtool		\
+    python3		\
+    openssl		\
+    lsb-release		\
+    locales             \
+    tftpd-hpa		\
+    tftp-hpa		\
+    cpio		\
 # Using expect to install Petalinux automatically.
     expect              \
-&& rm -rf /var/lib/apt/lists/* /tmp/* \
-&& ln -fs gcc-4.7 /usr/bin/gcc        \
-&& ln -fs gcc-ar-4.7 /usr/bin/gcc-ar  \
-&& ln -fs gcc-nm-4.7 /usr/bin/gcc-nm  \
-&& ln -fs gcc-ranlib-4.7 /usr/bin/gcc-ranlib
+&& locale-gen en_US.UTF-8		\
+&& mkdir /tftproot			\
+&& rm -rf /var/lib/apt/lists/* /tmp/* 
+COPY ./default/* /etc/default/
 
 # Install Petalinux tools
-WORKDIR $install_dir
-COPY ./auto-install.sh .
 
-# There are two methods to get petalinux installer in:
-# 1. Using COPY instruction, but it will significantly increase the size of image.
-#    In this way, you should place installer to context which is sent to docker daemon.
-# 2. Getting installer via network, but it need a server exit. If there is not a web
-#    address to host it, a simple http server can be set up locally using python.
-# You should choose one of them.
-# = 1. =============================================================================
-# COPY ./petalinux-v2014.4-final-installer.run .
-# RUN  chmod a+x petalinux-v2014.4-final-installer.run \
-#      && ./auto-install.sh $install_dir
-# = 2. =============================================================================
-RUN wget -q $installer_url/petalinux-v2014.4-final-installer.run && \
-    chmod a+x petalinux-v2014.4-final-installer.run              && \
-    ./auto-install.sh $install_dir                               && \
-    rm -rf petalinux-v2014.4-final-installer.run
+WORKDIR $install_dir
+COPY ./auto-install.sh $install_dir
+RUN mkdir -p $install_dir/$petalinux_dir	&& \
+    chmod 777 -R $install_dir			&& \
+    ln -fs /bin/bash /bin/sh    		&& \
+    useradd -ms /bin/bash petalinux
+USER petalinux
+WORKDIR $install_dir
+RUN wget -q $installer_url/petalinux-v2017.4-final-installer.run && \
+    chmod a+x petalinux-v2017.4-final-installer.run              && \
+    ./auto-install.sh $install_dir/$petalinux_dir                && \
+    rm -rf petalinux-v2017.4-final-installer.run
+
+
 # ==================================================================================
 
-# RUN echo 'alias plbuild="petaliux-build"' >> ~/.bashrc      && \
-#     echo 'alias plcreate="petaliux-create"' >> ~/.bashrc    && \
-#     echo 'alias plconfig="petalinx-config"' >> ~/.bashrc    && \
-
-RUN ln -fs /bin/bash /bin/sh    # bash is PetaLinux recommended shell
-WORKDIR /workspace
 
