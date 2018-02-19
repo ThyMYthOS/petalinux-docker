@@ -87,8 +87,13 @@ COPY ./auto-install.sh $install_dir
 RUN mkdir -p $install_dir/$petalinux_dir	&& \
     chmod 777 -R $install_dir			&& \
     ln -fs /bin/bash /bin/sh    		&& \
+    mkdir /workspace
+    chmod 777 /workspace
     useradd -ms /bin/bash petalinux
 USER petalinux
+
+# If you want a small image, you can run the following in a container with install_dir in a data volume.  The image can be gen use "docker commit"
+
 WORKDIR $install_dir
 RUN wget -q $installer_url/petalinux-v2017.4-final-installer.run && \
     chmod a+x petalinux-v2017.4-final-installer.run              && \
