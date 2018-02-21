@@ -1,4 +1,4 @@
-# Ubuntu docker image for Xilinx Petalinux tools 17.04
+# Ubuntu docker image for Xilinx Petalinux & VIVADO tools 17.04
 
 FROM  ubuntu:16.04
 LABEL maintainer="lxzheng@xmu.edu.cn"
@@ -6,6 +6,7 @@ LABEL maintainer="lxzheng@xmu.edu.cn"
 ARG install_dir=/opt
 ARG installer_url=172.17.0.1:8000
 ARG petalinux_dir=petalinux-v2017.4-final
+ARG vivado=Xilinx_Vivado_SDK_2017.4_1216_1
 
 ENV PETALINUX_VER=2017.4 				\
     PETALINUX=${install_dir}/${petalinux_dir}		\
@@ -64,6 +65,8 @@ RUN dpkg --add-architecture i386 		&& \
     zlib1g:i386		\
     libssl-dev		\
     xterm		\
+    libxi6 		\
+    libxtst6		\
     autoconf		\
     libtool		\
     python3		\
@@ -98,7 +101,13 @@ WORKDIR $install_dir
 RUN wget -q $installer_url/petalinux-v2017.4-final-installer.run && \
     chmod a+x petalinux-v2017.4-final-installer.run              && \
     ./auto-install.sh $install_dir/$petalinux_dir                && \
-    rm -rf petalinux-v2017.4-final-installer.run
+    rm -rf petalinux-v2017.4-final-installer.run		 && \
+    wget $install_dir/$vivado.tar.gz -q 			 && \
+    echo "Extracting Vivado tar file" 				 && \
+    tar xzf $vivado.tar.gz 					 && \
+    $vivado/xsetup --agree 3rdPartyEULA,WebTalkTerms,XilinxEULA     \
+		   --batch Install --config install_config.txt 	 && \
+    rm -rf $vivado*						    
 
 
 # ==================================================================================

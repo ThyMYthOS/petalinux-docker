@@ -2,7 +2,7 @@
 installer_dir=$1
 docker_context=`pwd`
 
-echo "Start to build petalinux tools docker image ..."
+echo "Start to build petalinux & vivado tools docker image ..."
 echo "-----------------------------------------------"
 
 cd $installer_dir
