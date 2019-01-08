@@ -56,6 +56,7 @@ RUN dpkg --add-architecture i386 && \
 # Install Petalinux tools
 WORKDIR $install_dir
 COPY ./auto-install.sh .
+RUN chmod a+x auto-install.sh
 
 # There are two methods to get petalinux installer in:
 # 1. Using COPY instruction, but it will significantly increase the size of image.
