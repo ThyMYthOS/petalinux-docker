@@ -11,7 +11,7 @@ server_pid=$!
 
 cd $docker_context
 installer_ip=`ifconfig docker0 | grep 'inet\s' | awk '{print $2}'`
-docker build -t petalinux-docker:2014.4 \
+docker build -t petalinux-docker:2015.2.1 \
              --build-arg installer_url=${installer_ip}:8000 \
              .
 

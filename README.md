@@ -1,7 +1,7 @@
-# Encapsulate Xilinx PetaLinux tools 14.04 into docker image
+# Encapsulate Xilinx PetaLinux tools 2015.02.1 into docker image
 
 ## Versions
-- PetaLinux version: 2014.4
+- PetaLinux version: 2015.2.1
 - Base image: Ubuntu:16.04
 
 ## Features
@@ -32,10 +32,6 @@ petalinux-build  # this will take a long time
 - alias can also be added to simplify some frequently-used commands, however, do the alias on host like `docker exec bash -c '<commands>'` may more convenient. 
 
 ## More help
-
-- I uploaded this image to docker hub, you can download via:
-
-  `docker pull xaljer/petalinux:2014.4`
 
 - More details for the Dockerfile and build process are recorded in [my blog](blog.csdn.net/elegant__), which is written in Chinese.
 

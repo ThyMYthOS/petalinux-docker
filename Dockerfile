@@ -1,13 +1,13 @@
-# Encapsulate Xilinx Petalinux tools 14.04 into docker image
+# Encapsulate Xilinx Petalinux tools 2015.02.1 into docker image
 
 FROM  ubuntu:16.04
-LABEL maintainer="xaljer@outlook.com"
+LABEL maintainer="manuel.stahl@awesome-technologies.de"
 
 ARG install_dir=/opt
 ARG installer_url=172.17.0.1:8000
 
-ENV PETALINUX_VER=2014.4 \
-    PETALINUX=${install_dir}/petalinux-v2014.4-final
+ENV PETALINUX_VER=2015.2.1 \
+    PETALINUX=${install_dir}/petalinux-v2015.2.1-final
 ENV PATH="${PETALINUX}/tools/linux-i386/arm-xilinx-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/arm-xilinx-linux-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/microblaze-xilinx-elf/bin:\
@@ -19,7 +19,7 @@ ${PATH}"
 RUN dpkg --add-architecture i386 && \
     apt-get update && apt-get install -y --no-install-recommends \
 # Required tools and libraries of Petalinux.
-# See in: ug1144-petalinux-tools-reference-guide, v2014.4.
+# See in: ug1144-petalinux-tools-reference-guide, v2015.2.1.
     tofrodos            \
     iproute             \
     gawk                \
@@ -45,6 +45,9 @@ RUN dpkg --add-architecture i386 && \
     libstdc++6:i386     \
     libselinux1         \
     libselinux1:i386    \
+    libssl-dev          \
+    libssl1.0.0         \
+    libssl1.0.0:i386    \
 # Using expect to install Petalinux automatically.
     expect              \
 && rm -rf /var/lib/apt/lists/* /tmp/* \
@@ -65,14 +68,15 @@ RUN chmod a+x auto-install.sh
 #    address to host it, a simple http server can be set up locally using python.
 # You should choose one of them.
 # = 1. =============================================================================
-# COPY ./petalinux-v2014.4-final-installer.run .
-# RUN  chmod a+x petalinux-v2014.4-final-installer.run \
-#      && ./auto-install.sh $install_dir
+# COPY ./petalinux-v2015.2.1-final-installer.run .
+# RUN  ls / && chmod a+x petalinux-v2015.2.1-final-installer.run \
+#      && ./auto-install.sh $install_dir \
+#      && rm -rf petalinux-v2015.2.1-final-installer.run
 # = 2. =============================================================================
-RUN wget -q $installer_url/petalinux-v2014.4-final-installer.run && \
-    chmod a+x petalinux-v2014.4-final-installer.run              && \
-    ./auto-install.sh $install_dir                               && \
-    rm -rf petalinux-v2014.4-final-installer.run
+RUN wget -q $installer_url/petalinux-v2015.2.1-final-installer.run && \
+    chmod a+x petalinux-v2015.2.1-final-installer.run              && \
+    ./auto-install.sh $install_dir                                 && \
+    rm -rf petalinux-v2015.2.1-final-installer.run
 # ==================================================================================
 
 # RUN echo 'alias plbuild="petaliux-build"' >> ~/.bashrc      && \
