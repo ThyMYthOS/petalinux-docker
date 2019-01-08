@@ -1,13 +1,13 @@
-# Encapsulate Xilinx Petalinux tools 14.04 into docker image
+# Encapsulate Xilinx Petalinux tools 2015.2.1 into docker image
 
-FROM  ubuntu:16.04
-LABEL maintainer="xaljer@outlook.com"
+FROM  ubuntu:14.04
+LABEL maintainer="manuel.stahl@awesome-technologies.de"
 
 ARG install_dir=/opt
 ARG installer_url=172.17.0.1:8000
 
-ENV PETALINUX_VER=2014.4 \
-    PETALINUX=${install_dir}/petalinux-v2014.4-final
+ENV PETALINUX_VER=2015.2.1
+ENV PETALINUX=${install_dir}/petalinux-v$PETALINUX_VER-final
 ENV PATH="${PETALINUX}/tools/linux-i386/arm-xilinx-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/arm-xilinx-linux-gnueabi/bin:\
 ${PETALINUX}/tools/linux-i386/microblaze-xilinx-elf/bin:\
@@ -19,39 +19,32 @@ ${PATH}"
 RUN dpkg --add-architecture i386 && \
     apt-get update && apt-get install -y --no-install-recommends \
 # Required tools and libraries of Petalinux.
-# See in: ug1144-petalinux-tools-reference-guide, v2014.4.
+# See in: ug1144-petalinux-tools-reference-guide, v2015.2.1.
     tofrodos            \
     iproute             \
     gawk                \
-    gcc-4.7             \
+    gcc                 \
     git-core            \
     make                \
     net-tools           \
+    ncurses-dev         \
+    libncurses5-dev     \
+    tftpd               \
+    zlib1g-dev          \
+    libssl-dev          \
     rsync               \
     wget                \
-    tftpd-hpa           \
-    zlib1g-dev          \
     flex                \
     bison               \
     bc                  \
     lib32z1             \
-    lib32gcc1           \
-    libncurses5-dev     \
-    libncursesw5-dev    \
-    libncursesw5:i386   \
-    libncurses5:i386    \
-    libbz2-1.0:i386     \
-    libc6:i386          \
-    libstdc++6:i386     \
+    lib32ncurses5       \
+    lib32bz2-1.0        \
+    lib32stdc++6        \
     libselinux1         \
-    libselinux1:i386    \
 # Using expect to install Petalinux automatically.
     expect              \
-&& rm -rf /var/lib/apt/lists/* /tmp/* \
-&& ln -fs gcc-4.7 /usr/bin/gcc        \
-&& ln -fs gcc-ar-4.7 /usr/bin/gcc-ar  \
-&& ln -fs gcc-nm-4.7 /usr/bin/gcc-nm  \
-&& ln -fs gcc-ranlib-4.7 /usr/bin/gcc-ranlib
+    && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Install Petalinux tools
 WORKDIR $install_dir

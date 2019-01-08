@@ -1,8 +1,8 @@
-# Encapsulate Xilinx PetaLinux tools 14.04 into docker image
+# Encapsulate Xilinx PetaLinux tools 2015.02.1 into docker image
 
 ## Versions
-- PetaLinux version: 2014.4
-- Base image: Ubuntu:16.04
+- PetaLinux version: 2015.2.1
+- Base image: Ubuntu:14.04
 
 ## Features
 - Environment variables are set, so no need to source settings.sh on launch.
@@ -16,7 +16,7 @@ You can use `build-image.sh` to build the image, which set up a HTTP server usin
 To run a container:
 
 ```shell
-docker run -ti -v /path/to/projects:/workspace xaljer/petalinux:2014.4
+docker run -ti -v /path/to/projects:/workspace petalinux:2015.2.1
 ```
 
 in the container:
@@ -33,13 +33,9 @@ petalinux-build  # this will take a long time
 
 ## More help
 
-- I uploaded this image to docker hub, you can download via:
-
-  `docker pull xaljer/petalinux:2014.4`
-
-- More details for the Dockerfile and build process are recorded in [my blog](blog.csdn.net/elegant__), which is written in Chinese.
+- More details for the Dockerfile and build process are recorded in [xaljer blog](blog.csdn.net/elegant__), which is written in Chinese.
 
 ## PetaLinux reference
 
-[ug1144-petalinux-tools-reference-guide](https://www.xilinx.com/support/documentation/sw_manuals/petalinux2014_4/ug1144-petalinux-tools-reference-guide.pdf)
+[ug1144-petalinux-tools-reference-guide](https://www.xilinx.com/support/documentation/sw_manuals/petalinux2015_2/ug1144-petalinux-tools-reference-guide.pdf)
 
