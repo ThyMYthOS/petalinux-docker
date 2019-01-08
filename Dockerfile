@@ -82,3 +82,4 @@ RUN wget -q $installer_url/petalinux-v2014.4-final-installer.run && \
 RUN ln -fs /bin/bash /bin/sh    # bash is PetaLinux recommended shell
 WORKDIR /workspace
 
+RUN petalinux-util --webtalk off
