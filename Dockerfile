@@ -65,14 +65,15 @@ RUN chmod a+x auto-install.sh
 #    address to host it, a simple http server can be set up locally using python.
 # You should choose one of them.
 # = 1. =============================================================================
-# COPY ./petalinux-v2014.4-final-installer.run .
-# RUN  chmod a+x petalinux-v2014.4-final-installer.run \
-#      && ./auto-install.sh $install_dir
+# COPY ./petalinux-v$PETALINUX_VER-final-installer.run .
+# RUN  ls / && chmod a+x petalinux-v$PETALINUX_VER-final-installer.run \
+#      && ./auto-install.sh $install_dir \
+#      && rm -rf petalinux-v$PETALINUX_VER-final-installer.run
 # = 2. =============================================================================
-RUN wget -q $installer_url/petalinux-v2014.4-final-installer.run && \
-    chmod a+x petalinux-v2014.4-final-installer.run              && \
-    ./auto-install.sh $install_dir                               && \
-    rm -rf petalinux-v2014.4-final-installer.run
+RUN wget -q $installer_url/petalinux-v$PETALINUX_VER-final-installer.run && \
+    chmod a+x petalinux-v$PETALINUX_VER-final-installer.run              && \
+    ./auto-install.sh $install_dir                                       && \
+    rm -rf petalinux-v$PETALINUX_VER-final-installer.run
 # ==================================================================================
 
 # RUN echo 'alias plbuild="petaliux-build"' >> ~/.bashrc      && \
