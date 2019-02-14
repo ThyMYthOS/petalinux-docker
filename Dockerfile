@@ -44,6 +44,14 @@ RUN dpkg --add-architecture i386 && \
     libselinux1         \
 # Using expect to install Petalinux automatically.
     expect              \
+# Futher dependecies
+    g++                 \
+    autoconf            \
+    automake            \
+    cmake               \
+    omniidl             \
+    python-dev          \
+    xutils-dev          \
     && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Install Petalinux tools
